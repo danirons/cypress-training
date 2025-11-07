@@ -20,4 +20,15 @@ describe('Task Tracker - API', () => {
     cy.contains('[data-cy="task-item"]', TASK_A).should('be.visible');
     cy.contains('[data-cy="task-item"]', TASK_B).should('be.visible');
   });
+
+  it('allows adding a task on top of API loaded tasks', () => {
+    cy.wait('@getTasks');
+
+    cy.get('[data-cy="task-input"]').type('user typed task');
+    cy.get('[data-cy="add-btn"]').click();
+
+    cy.contains('[data-cy="task-item"]', 'user typed task').should(
+      'be.visible'
+    );
+  });
 });
