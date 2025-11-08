@@ -13,9 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Force public npm registry (avoid private registry)
-        run: npm config set registry https://registry.npmjs.org/
-
       - name: Install deps
         run: npm ci
 
