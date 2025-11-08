@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css';
 
 type Task = {
@@ -10,18 +10,34 @@ const App = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  // guard against StrictMode double-effect
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    // pretend API for practice Cypress test
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
+    const MIN_LOADING_MS = 300;
+    const start = performance.now();
+
     fetch('/api/tasks')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then((data: Task[]) => {
         setTasks(data);
       })
       .catch(() => {
-        // in real life: show error state
+        setError(true);
       })
-      .finally(() => setLoading(false));
+      .finally(() => {
+        const elapsed = performance.now() - start;
+        const remaining = Math.max(0, MIN_LOADING_MS - elapsed);
+        setTimeout(() => setLoading(false), remaining);
+      });
   }, []);
 
   const addTask = () => {
@@ -51,11 +67,19 @@ const App = () => {
           </button>
         </div>
 
-        {loading ? (
+        {loading && (
           <p className="task-empty" data-cy="loading">
             Loading tasks…
           </p>
-        ) : (
+        )}
+
+        {error && !loading && (
+          <p className="task-empty" data-cy="error">
+            Something went wrong. Please try again later.
+          </p>
+        )}
+
+        {!loading && !error && (
           <ul className="task-list">
             {tasks.length === 0 && (
               <li className="task-empty" data-cy="empty-state">
