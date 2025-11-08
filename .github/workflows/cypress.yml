@@ -13,13 +13,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Force public npm registry (avoid private registry)
-        run: npm config set registry https://registry.npmjs.org/
+      - name: Remove any npmrc
+        run: |
+          rm -f ~/.npmrc
+          rm -f .npmrc
+          
+      - name: Show npm config
+        run: |
+          npm config list
+          npm config get registry
 
-      - name: Install deps
-        run: npm ci
+      - name: Install deps (public registry, no user config)
+        run: |
+          npm --userconfig=/dev/null ci --registry=https://registry.npmjs.org/
 
-      # E2E: start Vite and run tests
+      # ---- E2E ----
       - name: Cypress E2E
         uses: cypress-io/github-action@v6
         with:
@@ -28,7 +36,7 @@ jobs:
           wait-on-timeout: 60
           command: npm run test:e2e
 
-      # Component tests
+      # ---- Component ----
       - name: Cypress CT
         uses: cypress-io/github-action@v6
         with:
