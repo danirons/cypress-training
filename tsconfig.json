@@ -1,27 +1,19 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ],
   "compilerOptions": {
-    "strict": true,
-    "types": [
-      "cypress",
-      "node"
-    ],
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "jsx": "react-jsx",
-    "tsx": "react-tsx",
-    "moduleResolution": "node"
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": [
+      "node",
+      "cypress"
+    ]
   },
   "include": [
     "src",
-    "cypress",
-    "cypress.d.ts",
-    "cypress.config.ts"
+    "cypress"
   ]
 }
