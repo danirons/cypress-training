@@ -1,11 +1,27 @@
 {
   "files": [],
   "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
   ],
   "compilerOptions": {
-    "types": ["cypress", "node"]
+    "strict": true,
+    "types": [
+      "cypress",
+      "node"
+    ],
+    "jsx": "react-jsx",
+    "tsx": "react-tsx",
+    "moduleResolution": "node"
   },
-  "include": ["src", "cypress"]
+  "include": [
+    "src",
+    "cypress",
+    "cypress.d.ts",
+    "cypress.config.ts"
+  ]
 }
